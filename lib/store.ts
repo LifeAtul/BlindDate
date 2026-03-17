@@ -12,8 +12,14 @@ const SEED_IDEAS: Idea[] = [
     category: "AI/ML",
     difficulty: 4,
     marketPotential: "Very High",
+    status: "ACTIVE",
+    viewCount: 154,
     upvotes: 24,
+    authorId: "user-1",
+    authorName: "Sarah Jenkins",
+    expiresAt: null,
     createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
+    updatedAt: new Date(Date.now() - 86400000 * 3).toISOString(),
   },
   {
     id: "seed-2",
@@ -23,8 +29,14 @@ const SEED_IDEAS: Idea[] = [
     category: "E-Commerce",
     difficulty: 3,
     marketPotential: "High",
+    status: "ACTIVE",
+    viewCount: 98,
     upvotes: 18,
+    authorId: "user-2",
+    authorName: "David Chen",
+    expiresAt: null,
     createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+    updatedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
   },
   {
     id: "seed-3",
@@ -34,8 +46,14 @@ const SEED_IDEAS: Idea[] = [
     category: "EdTech",
     difficulty: 2,
     marketPotential: "Medium",
+    status: "ACTIVE",
+    viewCount: 65,
     upvotes: 12,
+    authorId: "user-3",
+    authorName: "Alex Rivera",
+    expiresAt: null,
     createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+    updatedAt: new Date(Date.now() - 86400000 * 5).toISOString(),
   },
   {
     id: "seed-4",
@@ -45,8 +63,14 @@ const SEED_IDEAS: Idea[] = [
     category: "FinTech",
     difficulty: 2,
     marketPotential: "High",
+    status: "ACTIVE",
+    viewCount: 201,
     upvotes: 31,
+    authorId: "user-4",
+    authorName: "Emma Watson",
+    expiresAt: null,
     createdAt: new Date(Date.now() - 86400000 * 1).toISOString(),
+    updatedAt: new Date(Date.now() - 86400000 * 1).toISOString(),
   },
   {
     id: "seed-5",
@@ -56,8 +80,14 @@ const SEED_IDEAS: Idea[] = [
     category: "HealthTech",
     difficulty: 3,
     marketPotential: "Very High",
+    status: "ACTIVE",
+    viewCount: 143,
     upvotes: 27,
+    authorId: "user-5",
+    authorName: "Dr. James Smith",
+    expiresAt: null,
     createdAt: new Date(Date.now() - 86400000 * 4).toISOString(),
+    updatedAt: new Date(Date.now() - 86400000 * 4).toISOString(),
   },
   {
     id: "seed-6",
@@ -67,8 +97,14 @@ const SEED_IDEAS: Idea[] = [
     category: "Developer Tools",
     difficulty: 4,
     marketPotential: "High",
+    status: "ACTIVE",
+    viewCount: 88,
     upvotes: 15,
+    authorId: "user-6",
+    authorName: "Elena Rodriguez",
+    expiresAt: null,
     createdAt: new Date(Date.now() - 86400000 * 6).toISOString(),
+    updatedAt: new Date(Date.now() - 86400000 * 6).toISOString(),
   },
   {
     id: "seed-7",
@@ -78,8 +114,14 @@ const SEED_IDEAS: Idea[] = [
     category: "Social",
     difficulty: 2,
     marketPotential: "Medium",
+    status: "ACTIVE",
+    viewCount: 54,
     upvotes: 9,
+    authorId: "user-7",
+    authorName: "Michael Chang",
+    expiresAt: null,
     createdAt: new Date(Date.now() - 86400000 * 7).toISOString(),
+    updatedAt: new Date(Date.now() - 86400000 * 7).toISOString(),
   },
   {
     id: "seed-8",
@@ -89,8 +131,14 @@ const SEED_IDEAS: Idea[] = [
     category: "SaaS",
     difficulty: 1,
     marketPotential: "High",
+    status: "ACTIVE",
+    viewCount: 112,
     upvotes: 20,
+    authorId: "user-8",
+    authorName: "Lisa Taylor",
+    expiresAt: null,
     createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+    updatedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
   },
 ];
 
@@ -108,7 +156,7 @@ export function saveIdeas(ideas: Idea[]): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(ideas));
 }
 
-export function addIdea(idea: Omit<Idea, "id" | "upvotes" | "createdAt">): { success: boolean; error?: string; idea?: Idea } {
+export function addIdea(idea: Omit<Idea, "id" | "upvotes" | "createdAt" | "status" | "viewCount" | "updatedAt" | "expiresAt" | "authorId">): { success: boolean; error?: string; idea?: Idea } {
   const ideas = getIdeas();
 
   // Validation
@@ -124,8 +172,13 @@ export function addIdea(idea: Omit<Idea, "id" | "upvotes" | "createdAt">): { suc
   const newIdea: Idea = {
     ...idea,
     id: `idea-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    status: "ACTIVE",
+    viewCount: 0,
+    authorId: "local-user",
+    expiresAt: null,
     upvotes: 0,
     createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
   ideas.unshift(newIdea);

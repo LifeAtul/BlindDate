@@ -1,14 +1,8 @@
 "use client";
 
+import { Eye } from "lucide-react";
 import { Idea, DIFFICULTY_LABELS, DifficultyLevel, getPopularityScore } from "@/lib/types";
 import { ChevronUp, Trash2 } from "lucide-react";
-
-interface IdeaCardProps {
-  idea: Idea;
-  onUpvote: (id: string) => void;
-  onDelete: (id: string) => void;
-  index: number;
-}
 
 const difficultyColors: Record<DifficultyLevel, string> = {
   1: "#16a34a",
@@ -25,18 +19,27 @@ const marketColors: Record<string, string> = {
   "Very High": "#d97706",
 };
 
-export default function IdeaCard({ idea, onUpvote, onDelete, index }: IdeaCardProps) {
+interface IdeaCardProps {
+  idea: Idea;
+  onUpvote: (id: string, e: React.MouseEvent) => void;
+  onDelete?: (id: string, e: React.MouseEvent) => void;
+  onClick: (idea: Idea) => void;
+  index: number;
+}
+
+export default function IdeaCard({ idea, onUpvote, onDelete, onClick, index }: IdeaCardProps) {
   const timeAgo = getTimeAgo(idea.createdAt);
   const popularity = getPopularityScore(idea);
 
   return (
     <div
-      className="idea-card rounded-xl border flex flex-col animate-slide-up"
+      className="idea-card rounded-xl border flex flex-col animate-slide-up group cursor-pointer"
       style={{
         background: "var(--bg-elevated)",
         borderColor: "var(--border)",
         animationDelay: `${index * 40}ms`,
       }}
+      onClick={() => onClick(idea)}
     >
       <div className="p-4 flex-1">
         {/* Category + Time */}
@@ -47,13 +50,13 @@ export default function IdeaCard({ idea, onUpvote, onDelete, index }: IdeaCardPr
           >
             {idea.category}
           </span>
-          <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>
+          <span className="text-[11px] font-medium" style={{ color: "var(--text-muted)" }}>
             {timeAgo}
           </span>
         </div>
 
         {/* Title */}
-        <h3 className="text-[15px] font-bold mb-1.5 leading-snug tracking-tight" style={{ color: "var(--text-primary)" }}>
+        <h3 className="text-[15px] font-bold mb-1.5 leading-snug tracking-tight group-hover:underline decoration-2 underline-offset-2" style={{ color: "var(--text-primary)" }}>
           {idea.title}
         </h3>
 
@@ -63,52 +66,41 @@ export default function IdeaCard({ idea, onUpvote, onDelete, index }: IdeaCardPr
         </p>
 
         {/* Tags */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap mb-4">
           <span
             className="text-[11px] font-semibold px-2 py-0.5 rounded-full"
-            style={{
-              color: difficultyColors[idea.difficulty],
-              background: `${difficultyColors[idea.difficulty]}10`,
-            }}
+            style={{ color: difficultyColors[idea.difficulty], background: `${difficultyColors[idea.difficulty]}10` }}
           >
             {idea.difficulty}/5 · {DIFFICULTY_LABELS[idea.difficulty]}
           </span>
           <span
             className="text-[11px] font-semibold px-2 py-0.5 rounded-full"
-            style={{
-              color: marketColors[idea.marketPotential],
-              background: `${marketColors[idea.marketPotential]}10`,
-            }}
+            style={{ color: marketColors[idea.marketPotential], background: `${marketColors[idea.marketPotential]}10` }}
           >
             {idea.marketPotential}
           </span>
         </div>
-
-        {/* Popularity */}
-        <div className="mt-3 flex items-center gap-2">
-          <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: "var(--bg-secondary)" }}>
-            <div
-              className="popularity-bar h-full rounded-full"
-              style={{
-                width: `${Math.min(popularity, 100)}%`,
-                background: "var(--accent)",
-                opacity: 0.7,
-              }}
-            />
-          </div>
-          <span className="text-[10px] font-bold tabular-nums" style={{ color: "var(--text-muted)" }}>
-            {popularity}
-          </span>
+        
+        {/* Author & Views */}
+        <div className="flex items-center justify-between mt-auto">
+           <span className="text-[11px] font-medium" style={{ color: "var(--text-secondary)" }}>
+             By <span className="font-bold" style={{ color: "var(--text-primary)" }}>{idea.authorName || "Anonymous"}</span>
+           </span>
+           <span className="flex items-center gap-1 text-[11px] font-bold" style={{ color: "var(--text-muted)" }}>
+             <Eye className="w-3.5 h-3.5" />
+             {idea.viewCount || 0}
+           </span>
         </div>
       </div>
 
-      {/* Footer */}
+      {/* Footer (Actions) */}
       <div
         className="flex items-center justify-between px-4 py-2.5 border-t"
         style={{ borderColor: "var(--border)" }}
+        onClick={(e) => e.stopPropagation()} // Prevent card click when clicking footer
       >
         <button
-          onClick={() => onUpvote(idea.id)}
+          onClick={(e) => onUpvote(idea.id, e)}
           className="upvote-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold"
           style={{ color: "var(--accent)" }}
           id={`upvote-${idea.id}`}
@@ -116,14 +108,16 @@ export default function IdeaCard({ idea, onUpvote, onDelete, index }: IdeaCardPr
           <ChevronUp className="w-4 h-4" />
           {idea.upvotes}
         </button>
-        <button
-          onClick={() => onDelete(idea.id)}
-          className="delete-btn p-2 rounded-full"
-          style={{ color: "var(--text-muted)" }}
-          id={`delete-${idea.id}`}
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-        </button>
+        {onDelete && (
+          <button
+            onClick={(e) => onDelete(idea.id, e)}
+            className="delete-btn p-2 rounded-full"
+            style={{ color: "var(--text-muted)" }}
+            id={`delete-${idea.id}`}
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        )}
       </div>
     </div>
   );

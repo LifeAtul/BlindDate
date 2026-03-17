@@ -168,20 +168,39 @@ export default function SubmitIdeaDialog({ onSubmit, onClose }: SubmitIdeaDialog
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--text-muted)" }}>
-              Market Potential
-            </label>
-            <select
-              value={form.marketPotential}
-              onChange={(e) => updateField("marketPotential", e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg border text-sm"
-              style={{ background: "var(--bg-secondary)", borderColor: "var(--border)", color: form.marketPotential ? "var(--text-primary)" : "var(--text-muted)" }}
-              id="input-market"
-            >
-              <option value="">Select</option>
-              {MARKET_POTENTIALS.map((mp) => (<option key={mp} value={mp}>{mp}</option>))}
-            </select>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--text-muted)" }}>
+                Market Potential
+              </label>
+              <select
+                value={form.marketPotential}
+                onChange={(e) => updateField("marketPotential", e.target.value)}
+                className="w-full px-3 py-2.5 rounded-lg border text-sm"
+                style={{ background: "var(--bg-secondary)", borderColor: "var(--border)", color: form.marketPotential ? "var(--text-primary)" : "var(--text-muted)" }}
+                id="input-market"
+              >
+                <option value="">Select</option>
+                {MARKET_POTENTIALS.map((mp) => (<option key={mp} value={mp}>{mp}</option>))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold uppercase tracking-widest mb-1.5 flex justify-between" style={{ color: "var(--text-muted)" }}>
+                <span>Expiry</span>
+                <span style={{ color: "var(--text-secondary)" }}>Optional</span>
+              </label>
+              <select
+                value={form.expiresInHours}
+                onChange={(e) => updateField("expiresInHours", e.target.value)}
+                className="w-full px-4 py-3 rounded-full border text-sm transition-shadow"
+                style={{ background: "var(--bg-secondary)", borderColor: "var(--border)", color: form.expiresInHours !== undefined ? "var(--text-primary)" : "var(--text-muted)" }}
+              >
+                <option value={undefined}>Never (Default)</option>
+                <option value={24}>24 Hours</option>
+                <option value={48}>48 Hours</option>
+                <option value={168}>7 Days</option>
+              </select>
+            </div>
           </div>
 
           <button

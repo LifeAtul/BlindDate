@@ -1,0 +1,49 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  ideas     Idea[]
+  upvotes   Upvote[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Idea {
+  id               String    @id @default(uuid())
+  title            String    @unique
+  description      String
+  problemStatement String
+  category         String
+  difficulty       Int
+  marketPotential  String
+  status           String    @default("ACTIVE") // ACTIVE, HIDDEN, ARCHIVED
+  viewCount        Int       @default(0)
+  expiresAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  authorId         String
+  author           User      @relation(fields: [authorId], references: [id])
+  upvotes          Upvote[]
+}
+
+model Upvote {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  ideaId    String
+  idea      Idea     @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, ideaId])
+}

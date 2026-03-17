@@ -1,3 +1,9 @@
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export interface Idea {
   id: string;
   title: string;
@@ -6,8 +12,15 @@ export interface Idea {
   category: Category;
   difficulty: DifficultyLevel;
   marketPotential: MarketPotential;
+  status: "ACTIVE" | "HIDDEN" | "ARCHIVED";
+  viewCount: number;
   upvotes: number;
   createdAt: string;
+  updatedAt: string;
+  expiresAt: string | null;
+  authorId: string;
+  authorName?: string;
+  popularityScore?: number;
 }
 
 export type Category =
