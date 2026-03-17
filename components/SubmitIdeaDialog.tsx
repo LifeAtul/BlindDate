@@ -5,7 +5,7 @@ import { Idea, CATEGORIES, MARKET_POTENTIALS, DIFFICULTY_LABELS, DifficultyLevel
 import { X } from "lucide-react";
 
 interface SubmitIdeaDialogProps {
-  onSubmit: (data: Omit<Idea, "id" | "upvotes" | "createdAt">) => { success: boolean; error?: string };
+  onSubmit: (data: any) => Promise<{ success: boolean; error?: string; idea?: any }>;
   onClose: () => void;
 }
 
@@ -17,11 +17,12 @@ export default function SubmitIdeaDialog({ onSubmit, onClose }: SubmitIdeaDialog
     category: "",
     difficulty: "",
     marketPotential: "",
+    expiresInHours: "" as string | undefined,
   });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -33,13 +34,14 @@ export default function SubmitIdeaDialog({ onSubmit, onClose }: SubmitIdeaDialog
     if (!form.marketPotential) { setError("Please select market potential"); return; }
 
     setSubmitting(true);
-    const result = onSubmit({
+    const result = await onSubmit({
       title: form.title.trim(),
       description: form.description.trim(),
       problemStatement: form.problemStatement.trim(),
       category: form.category as Category,
       difficulty: Number(form.difficulty) as DifficultyLevel,
       marketPotential: form.marketPotential as MarketPotential,
+      expiresInHours: form.expiresInHours ? Number(form.expiresInHours) : undefined,
     });
 
     if (!result.success) {
